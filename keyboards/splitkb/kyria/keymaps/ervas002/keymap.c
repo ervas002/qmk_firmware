@@ -24,6 +24,18 @@ enum layers {
     _ADJUST,
 };
 
+// Tap Dance declarations
+enum {
+    TD_QUOT_DQUO,
+};
+
+// Tap Dance definitions
+qk_tap_dance_action_t tap_dance_actions[] = {
+    // Tap once for single quote, twice for double quote
+    [TD_QUOT_DQUO] = ACTION_TAP_DANCE_DOUBLE(SE_QUOT, SE_DQUO),
+    [TD_C_COPY] = ACTION_TAP_DANCE_DOUBLE(KC_C, SEND_STRING(SS_LCTL("c"))),
+    [TD_V_PASTE] = ACTION_TAP_DANCE_DOUBLE(KC_V, SEND_STRING(SS_LCTL("v"))),
+};
 
 // Aliases for readability
 #define QWERTY   DF(_QWERTY)
@@ -53,7 +65,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
  * |  Tab   |   A  |   S  |   D  |   F  |   G  |                              |   H  |   J  |   K  |   L  |   Ö  |    Ä   |
  * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
- * | LShift |   Z  |   X  |   C  |   V  |   B  |CapsLk|  Sym |  |F-keys|  ] } |   N  |   M  | ,  < | . >  | /  ? | RShift |
+ * | LShift |   Z  |   X  |   C  |   V  |   B  |CapsLk|  Sym |  |F-keys|  ] } |   N  |   M  | ,  ; | . :  |  '   | RShift |
  * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
  *                        |Adjust|CapsLk| LAlt |LCtl/ | LGUI |  | Nav  | Enter| Bksp | RGUI | Menu |
  *                        |      |      |      |Space |      |  |      |      |      |      |      |
@@ -62,7 +74,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_QWERTY] = LAYOUT(
      KC_ESC  , KC_Q ,  KC_W   ,  KC_E  ,   KC_R ,   KC_T ,                                        KC_Y,   KC_U ,  KC_I ,   KC_O ,  KC_P , SE_ARNG,
      KC_TAB  , KC_A ,  KC_S   ,  KC_D  ,   KC_F ,   KC_G ,                                        KC_H,   KC_J ,  KC_K ,   KC_L ,SE_ODIA, SE_ADIA,
-     KC_LSFT , KC_Z ,  KC_X   ,  KC_C  ,   KC_V ,   KC_B ,  KC_CAPS,  SYM  ,     FKEYS  , KC_RBRC, KC_N,   KC_M ,KC_COMM, KC_DOT ,SE_SLSH, KC_RSFT,
+     KC_LSFT , KC_Z ,  KC_X   ,SEND_STRING(SS_LGUI("c")),SEND_STRING(SS_LGUI("v")),   KC_B ,  KC_CAPS,  SYM  ,     FKEYS  , KC_RBRC, KC_N,   KC_M ,KC_COMM, KC_DOT ,TD(TD_QUOT_DQUO), KC_RSFT,
                                 ADJUST , KC_CAPS, KC_LALT,CTL_SPACE,KC_LGUI,     NAV    , KC_ENT ,KC_BSPC, KC_RGUI, KC_APP
     ),
 
@@ -96,16 +108,16 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
  * |    ~   |  !   |  @   |  #   |  $   |  %   |                              |   ^  |  &   |  *   |  (   |  )   |   +    |
  * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
- * |    |   |   \  |  :   |  ;   |  -   |  [   |  {   |      |  |      |   }  |   ]  |  _   |  ,   |  .   |  /   |   ?    |
+ * |    |   |   \  |  <   |  >   |  -   |  [   |  {   |      |  |      |   }  |   ]  |  _   |  ,   |  .   |  /   |   ?    |
  * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
  *                        |      |      |      |      |      |  |      |      |      |      |      |
  *                        |      |      |      |      |      |  |      |      |      |      |      |
  *                        `----------------------------------'  `----------------------------------'
  */
     [_SYM] = LAYOUT(
-      KC_GRV ,   KC_1 ,   KC_2 ,   KC_3 ,   KC_4 ,   KC_5 ,                                       KC_6 ,   KC_7 ,   KC_8 ,   KC_9 ,   KC_0 , KC_EQL ,
-     KC_TILD , KC_EXLM,  KC_AT , KC_HASH,  KC_DLR, KC_PERC,                                     KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_PLUS,
-     KC_PIPE , KC_BSLS, KC_COLN, KC_SCLN, KC_MINS, KC_LBRC, KC_LCBR, _______, _______, KC_RCBR, KC_RBRC, KC_UNDS, KC_COMM,  KC_DOT, KC_SLSH, KC_QUES,
+       SE_GRV,   KC_1 ,   KC_2 ,   KC_3 ,   KC_4 ,   KC_5 ,                                       KC_6 ,   KC_7 ,   KC_8 ,   KC_9 ,   KC_0 , SE_EQL ,
+     SE_TILD , KC_EXLM,  SE_AT , KC_HASH,  SE_DLR, KC_PERC,                                     SE_CIRC, SE_AMPR, SE_ASTR, SE_LPRN, SE_RPRN, SE_PLUS,
+     SE_PIPE , SE_BSLS, SE_LABK, SE_RABK, SE_MINS, SE_LBRC, SE_LCBR, _______, _______, SE_RCBR, SE_RBRC, SE_UNDS, KC_COMM,  KC_DOT, SE_SLSH, SE_QUES,
                                  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
     ),
 
