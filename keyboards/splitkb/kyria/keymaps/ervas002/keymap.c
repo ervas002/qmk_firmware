@@ -1,4 +1,4 @@
-/* Copyright 2019 Thomas Baart <thomas@splitkb.com>
+    /* Copyright 2019 Thomas Baart <thomas@splitkb.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,6 +16,9 @@
 #include QMK_KEYBOARD_H
 #include "../../../../../quantum/keymap_extras/keymap_swedish_pro_osx_ansi.h"
 
+// To compile: qmk compile -kb splitkb/kyria -km ervas002
+// To flash: qmk flash -kb splitkb/kyria -km ervas002
+
 enum layers {
     _QWERTY = 0,
     _NAV,
@@ -27,15 +30,41 @@ enum layers {
 // Tap Dance declarations
 enum {
     TD_QUOT_DQUO,
+    TD_C_COPY,
+    TD_V_PASTE
+};
+
+enum my_keycodes {
+    C_COPY = SAFE_RANGE,
 };
 
 // Tap Dance definitions
 qk_tap_dance_action_t tap_dance_actions[] = {
     // Tap once for single quote, twice for double quote
     [TD_QUOT_DQUO] = ACTION_TAP_DANCE_DOUBLE(SE_QUOT, SE_DQUO),
-    [TD_C_COPY] = ACTION_TAP_DANCE_DOUBLE(KC_C, SEND_STRING(SS_LCTL("c"))),
-    [TD_V_PASTE] = ACTION_TAP_DANCE_DOUBLE(KC_V, SEND_STRING(SS_LCTL("v"))),
+    // [TD_C_COPY] = ACTION_TAP_DANCE_DOUBLE(KC_C, SS_LCTL(KC_C)),
+    // [TD_V_PASTE] = ACTION_TAP_DANCE_DOUBLE(KC_V, SS_LCTL(KC_V)),
+    // [TD_C_COPY] = ACTION_TAP_DANCE_DOUBLE(KC_C, C_COPY),
+    // [TD_V_PASTE] = ACTION_TAP_DANCE_DOUBLE(KC_V, C_COPY),
+    // [TD_C_COPY] = ACTION_TAP_DANCE_DOUBLE(KC_C, SEND_STRING(SS_LCTL("c"))),
+    // [TD_V_PASTE] = ACTION_TAP_DANCE_DOUBLE(KC_V, SEND_STRING(SS_LCTL("v"))),
 };
+
+// bool process_record_user(uint16_t keycode, keyrecord_t *record){
+//     switch(keycode) {
+//         case C_COPY:
+//             if(record->event.pressed) {
+//                 SEND_STRING("test1");
+//             }
+//             else {
+//                 SEND_STRING("test2");
+//             }
+//             return false;
+//         default:
+//             return true;
+//     }
+//     return true;
+// };
 
 // Aliases for readability
 #define QWERTY   DF(_QWERTY)
@@ -74,7 +103,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_QWERTY] = LAYOUT(
      KC_ESC  , KC_Q ,  KC_W   ,  KC_E  ,   KC_R ,   KC_T ,                                        KC_Y,   KC_U ,  KC_I ,   KC_O ,  KC_P , SE_ARNG,
      KC_TAB  , KC_A ,  KC_S   ,  KC_D  ,   KC_F ,   KC_G ,                                        KC_H,   KC_J ,  KC_K ,   KC_L ,SE_ODIA, SE_ADIA,
-     KC_LSFT , KC_Z ,  KC_X   ,SEND_STRING(SS_LGUI("c")),SEND_STRING(SS_LGUI("v")),   KC_B ,  KC_CAPS,  SYM  ,     FKEYS  , KC_RBRC, KC_N,   KC_M ,KC_COMM, KC_DOT ,TD(TD_QUOT_DQUO), KC_RSFT,
+     KC_LSFT , KC_Z ,  KC_X   ,  KC_C  ,  KC_V  ,   KC_B ,  KC_CAPS,  SYM  ,     FKEYS  , KC_RBRC, KC_N,   KC_M ,KC_COMM, KC_DOT ,TD(TD_QUOT_DQUO), KC_RSFT,
+    //  KC_LSFT , KC_Z ,  KC_X   ,TD(TD_C_COPY),TD(TD_V_PASTE) ,   KC_B ,  KC_CAPS,  SYM  ,     FKEYS  , KC_RBRC, KC_N,   KC_M ,KC_COMM, KC_DOT ,TD(TD_QUOT_DQUO), KC_RSFT,
                                 ADJUST , KC_CAPS, KC_LALT,CTL_SPACE,KC_LGUI,     NAV    , KC_ENT ,KC_BSPC, KC_RGUI, KC_APP
     ),
 
